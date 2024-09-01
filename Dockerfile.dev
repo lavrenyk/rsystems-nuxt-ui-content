@@ -1,0 +1,20 @@
+
+# Базовый образ
+FROM node:18-alpine as base
+
+WORKDIR /app
+
+# Build
+FROM base as build
+
+COPY --link package.json .
+RUN npm install --force
+
+# Run
+FROM base
+
+COPY --from=build /app/node_modules /app/node_modules
+
+COPY . .
+
+CMD [ "npm", "run", "dev" ]
